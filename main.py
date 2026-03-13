@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from routes.aesthetic import router as aesthetic_router
 from routes.fashion import router as fashion_router
 
-load_dotenv()
+load_dotenv(override=False)
 
 app = FastAPI(title="GEL API", version="1.0.0")
 
