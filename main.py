@@ -27,3 +27,9 @@ app.include_router(fashion_router, prefix="/fashion")
 @app.get("/")
 def health_check():
     return {"status": "ok", "service": "GEL API"}
+
+@app.get("/debug")
+def debug():
+    import os
+    key = os.getenv("OPENAI_API_KEY", "NOT_FOUND")
+    return {"key_prefix": key[:10] if key else "EMPTY", "key_length": len(key) if key else 0}
