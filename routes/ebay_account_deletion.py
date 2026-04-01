@@ -9,6 +9,8 @@ from fastapi.responses import JSONResponse
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
+EBAY_ENDPOINT_URL = "https://web-production-78bf0.up.railway.app/ebay/account-deletion"
+
 
 def _challenge_response(challenge_code: str, endpoint_url: str) -> str:
     """
@@ -33,8 +35,7 @@ async def challenge_verification(request: Request):
     if not code:
         return Response(status_code=400)
 
-    endpoint_url = str(request.url).split("?")[0]
-    return JSONResponse({"challengeResponse": _challenge_response(code, endpoint_url)})
+    return JSONResponse({"challengeResponse": _challenge_response(code, EBAY_ENDPOINT_URL)})
 
 
 @router.post("")
