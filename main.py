@@ -20,6 +20,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routes.aesthetic import router as aesthetic_router
 from routes.fashion import router as fashion_router
+from routes.ebay_account_deletion import router as ebay_account_deletion_router
 
 app = FastAPI(title="GEL API", version="1.0.0")
 
@@ -39,6 +40,7 @@ app.add_middleware(
 # Register routes
 app.include_router(aesthetic_router, prefix="/aesthetic")
 app.include_router(fashion_router, prefix="/fashion")
+app.include_router(ebay_account_deletion_router, prefix="/ebay/account-deletion")
 
 
 @app.get("/")
@@ -84,4 +86,13 @@ async def debug():
         "dotenv_file_exists": env_file_exists,
         "dotenv_file_keys": env_file_contents,
         "total_env_var_count": len(os.environ),
+    }
+
+
+@app.get("/debug/env")
+def debug_env():
+    return {
+        "OPENAI_API_KEY_exists": bool(os.environ.get("OPENAI_API_KEY")),
+        "OPENAI_API_KEY_length": len(os.environ.get("OPENAI_API_KEY", "")),
+        "all_env_keys": list(os.environ.keys()),
     }
