@@ -22,16 +22,19 @@ def _challenge_response(challenge_code: str, endpoint_url: str) -> str:
 
 
 @router.get("")
-async def challenge_verification(request: Request, challenge_code: Optional[str] = None):
+async def challenge_verification(request: Request):
     """
-    eBay sends a GET with ?challenge_code=... to verify the endpoint.
+    eBay sends a GET with ?challengeCode=... to verify the endpoint.
+    Also accepts ?challenge_code=... as a fallback.
     Respond with the SHA-256 hash so eBay confirms ownership.
     """
-    if not challenge_code:
+    params = request.query_params
+    code = params.get("challengeCode") or params.get("challenge_code")
+    if not code:
         return Response(status_code=400)
 
     endpoint_url = str(request.url).split("?")[0]
-    return JSONResponse({"challengeResponse": _challenge_response(challenge_code, endpoint_url)})
+    return JSONResponse({"challengeResponse": _challenge_response(code, endpoint_url)})
 
 
 @router.post("")
