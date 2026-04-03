@@ -10,6 +10,7 @@ class FashionSearchRequest(BaseModel):
     budget_max: float = 500
     gender: str = "unisex"
     limit: int = 12
+    excluded_item_ids: list[str] = []
 
 class FashionItem(BaseModel):
     title: str
@@ -34,7 +35,8 @@ async def search_fashion(request: FashionSearchRequest):
             budget_min=request.budget_min,
             budget_max=request.budget_max,
             gender=request.gender,
-            limit=request.limit
+            limit=request.limit,
+            excluded_ids=request.excluded_item_ids
         )
         return {"items": items, "total": len(items)}
     except Exception as e:

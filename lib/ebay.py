@@ -63,7 +63,8 @@ async def search_single_keyword(
     budget_min: float,
     budget_max: float,
     gender: str,
-    limit: int = 3
+    limit: int = 3,
+    excluded_ids: set[str] | None = None
 ) -> list[dict]:
     """Search eBay for a single keyword and return normalized items."""
 
@@ -127,6 +128,10 @@ async def search_single_keyword(
             if condition == "USED":
                 condition = "Pre-owned"
 
+            item_id = item.get("itemId", "")
+            if excluded_ids and item_id and item_id in excluded_ids:
+                continue
+
             results.append({
                 "title": item.get("title", ""),
                 "price": price,
@@ -134,7 +139,7 @@ async def search_single_keyword(
                 "item_url": item.get("itemWebUrl", "https://www.ebay.com"),
                 "condition": condition,
                 "source": "eBay",
-                "item_id": item.get("itemId", "")
+                "item_id": item_id
             })
 
         return results
@@ -144,7 +149,8 @@ async def search_fashion_items(
     budget_min: float,
     budget_max: float,
     gender: str,
-    limit: int = 12
+    limit: int = 12,
+    excluded_ids: list[str] = []
 ) -> list[dict]:
     """
     Search eBay for fashion items using multiple keywords in parallel.
@@ -168,9 +174,10 @@ async def search_fashion_items(
     # Use top 6 keywords and search 2-3 items each in parallel
     top_keywords = keywords[:6]
     items_per_keyword = max(2, limit // len(top_keywords))
+    excluded_set = set(excluded_ids) if excluded_ids else None
 
     tasks = [
-        search_single_keyword(kw, token, budget_min, budget_max, gender, items_per_keyword)
+        search_single_keyword(kw, token, budget_min, budget_max, gender, items_per_keyword, excluded_set)
         for kw in top_keywords
     ]
 
