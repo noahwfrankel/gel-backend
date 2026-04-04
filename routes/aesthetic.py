@@ -10,14 +10,16 @@ class AestheticRequest(BaseModel):
 
 class AestheticResponse(BaseModel):
     aesthetic_label: str
-    era: str
+    era: str = ""
     description: str
     colors: list[str]
-    silhouettes: list[str]
+    silhouettes: list[str] = []
     key_garments: list[str]
-    key_brands: list[str]
+    key_brands: list[str] = []
     ebay_search_keywords: list[str]
-    avoid: list[str]
+    artist_influence: list[str] = []
+    buying_push: str = ""
+    avoid: list[str] = []
 
 @router.post("/from-genre", response_model=AestheticResponse)
 async def get_aesthetic(request: AestheticRequest):

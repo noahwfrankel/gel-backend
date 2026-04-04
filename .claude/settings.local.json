@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(uvicorn main:app --port 8001)",
+      "Bash(python3 -m uvicorn main:app --port 8001)",
+      "Bash(curl -s -X POST http://localhost:8001/aesthetic/from-genre -H 'Content-Type: application/json' -d '{\"genre\": \"acid jazz\", \"artists\": [\"Kendrick Lamar\", \"Flying Lotus\"]}')",
+      "Bash(python3 -m json.tool)",
+      "Bash(git add:*)",
+      "Bash(git commit -m ':*)",
+      "Bash(git push:*)",
+      "Bash(npm run:*)"
+    ]
+  }
+}
